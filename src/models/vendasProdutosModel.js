@@ -23,22 +23,20 @@ const vendasProdutosModel = sequelize.define('VendasProdutos', {
         allowNull: false
     }
 }, {
-    tableName: 'VendasProdutos', 
-    timestamps: false 
+    tableName: 'VendasProdutos',
+    timestamps: false
 });
 
 produtosModel.belongsToMany(vendasModel, {
     through: vendasProdutosModel,
     foreignKey: 'ID_ProdutoVP',
-    otherKey: 'ID_VendaVP',
-    as: 'Vendas'
+    as: 'produtosVendas'
 });
 
 vendasModel.belongsToMany(produtosModel, {
     through: vendasProdutosModel,
     foreignKey: 'ID_VendaVP',
-    otherKey: 'ID_ProdutoVP',
-    as: 'Produtos'
+    as: 'vendasProdutos'
 });
 
 module.exports = { vendasProdutosModel };

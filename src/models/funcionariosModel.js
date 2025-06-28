@@ -12,12 +12,12 @@ const funcionariosModel = sequelize.define('Funcionarios',{
         type: DataTypes.STRING,
         allowNull: false
     },
-    emailFunicionario:{
+    emailFuncionario:{
         type: DataTypes.STRING,
         allowNull: false,
         unique: false
     },
-    senhaFunicionario:{
+    senhaFuncionario:{
         type: DataTypes.STRING,
         allowNull: false,
     },

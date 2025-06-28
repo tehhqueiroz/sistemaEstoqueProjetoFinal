@@ -1,12 +1,9 @@
-const { timeStamp } = require('console');
 const { sequelize } = require('../config/db');
-const { DataTypes, ForeignKeyConstraintError } = require('sequelize');
-const { fornecedoresModel } = require('./fornecedoresModel');
-const { funcionariosModel } = require('./funcionariosModel');
+const { DataTypes } = require('sequelize');
 const { produtosModel } = require('./produtosModel');
 
-const movimentacaoModel = sequelize.define('Movimentacao',{
-    ID_Movimentacao:{
+const movimentacaoModel = sequelize.define('Movimentacao', {
+    ID_Movimentacao: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
@@ -23,7 +20,7 @@ const movimentacaoModel = sequelize.define('Movimentacao',{
         type: DataTypes.DATEONLY,
         allowNull: false
     },
-    idProdutoMovimentacao:{
+    idProdutoMovimentacao: {
         type: DataTypes.INTEGER,
         references: {
             model: produtosModel,
@@ -32,12 +29,12 @@ const movimentacaoModel = sequelize.define('Movimentacao',{
         allowNull: false
     }
 
-    },{
+}, {
     tableName: 'Movimentacao',
     timestamps: false
 });
 
-produtosModel.hasMany(movimentacaoModel,{foreignKey: 'idProdutoMovimentacao', as: 'Produto'});
-movimentacaoModel.belongsTo(produtosModel, {foreignKey: 'idProdutoMovimentacao', as: 'Produto'});
+produtosModel.hasMany(movimentacaoModel, { foreignKey: 'idProdutoMovimentacao', as: 'produtoMovimentacao' });
+movimentacaoModel.belongsTo(produtosModel, { foreignKey: 'idProdutoMovimentacao', as: 'movimentacaoProduto' });
 
-module.exports = {movimentacaoModel};
+module.exports = { movimentacaoModel };

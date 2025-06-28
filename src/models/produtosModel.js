@@ -1,6 +1,5 @@
-const { timeStamp } = require('console');
 const { sequelize } = require('../config/db');
-const { DataTypes, ForeignKeyConstraintError } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const { fornecedoresModel } = require('./fornecedoresModel');
 const { funcionariosModel } = require('./funcionariosModel');
 
@@ -45,7 +44,7 @@ const produtosModel = sequelize.define('Produtos',{
     idFornecedorProduto:{
         type: DataTypes.INTEGER,
         references: {
-            model: fornecedorModel,
+            model: fornecedoresModel,
             key: 'ID_Fornecedor',
         },
         allowNull: false
@@ -64,9 +63,9 @@ const produtosModel = sequelize.define('Produtos',{
     timestamps: false
 });
 
-funcionariosModel.hasMany(produtosModel,{foreignKey: 'idFuncionarioProduto', as: 'Funcionario'});
-fornecedoresModel.hasMany(produtosModel,{foreignKey: 'idFornecedorProduto', as: 'Fornecedor'});
-produtosModel.belongsTo(funcionariosModel, {foreignKey: 'idFuncionarioProduto', as: 'Funcionario'});
-produtosModel.belongsTo(fornecedoresModel, {foreignKey: 'idFornecedorProduto', as: 'Fornecedor'});
+funcionariosModel.hasMany(produtosModel,{foreignKey: 'idFuncionarioProduto', as: 'funcionariosProdutos'});
+fornecedoresModel.hasMany(produtosModel,{foreignKey: 'idFornecedorProduto', as: 'fornecedoresProdutos'});
+produtosModel.belongsTo(funcionariosModel, {foreignKey: 'idFuncionarioProduto', as: 'produtosFuncionarios'});
+produtosModel.belongsTo(fornecedoresModel, {foreignKey: 'idFornecedorProduto', as: 'produtosFornecedores'});
 
 module.exports = {produtosModel};

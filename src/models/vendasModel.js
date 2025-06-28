@@ -1,9 +1,6 @@
-const { timeStamp } = require('console');
 const { sequelize } = require('../config/db');
-const { DataTypes, ForeignKeyConstraintError } = require('sequelize');
-const { fornecedoresModel } = require('./fornecedoresModel');
+const { DataTypes } = require('sequelize');
 const { funcionariosModel } = require('./funcionariosModel');
-const { produtosModel } = require('./produtosModel');
 const { clientesModel } = require('./clientesModel');
 
 const vendasModel = sequelize.define('Vendas',{
@@ -46,10 +43,10 @@ const vendasModel = sequelize.define('Vendas',{
     timestamps: false
 });
 
-funcionariosModel.hasMany(vendasModel,{foreignKey: 'idFuncionarioVenda', as: 'Funcionario'});
-clientesModel.hasMany(vendasModel,{foreignKey: 'idClienteVenda', as: 'Clientes'});
-vendasModel.belongsTo(funcionariosModel, {foreignKey: 'idFuncionarioVenda', as: 'Funcionario'});
-vendasModel.belongsTo(clientesModel, {foreignKey: 'idClienteVenda', as: 'Clientes'});
+funcionariosModel.hasMany(vendasModel,{foreignKey: 'idFuncionarioVenda', as: 'funcionariosVendas'});
+clientesModel.hasMany(vendasModel,{foreignKey: 'idClienteVenda', as: 'clientesVendas'});
+vendasModel.belongsTo(funcionariosModel, {foreignKey: 'idFuncionarioVenda', as: 'vendasFuncionarios'});
+vendasModel.belongsTo(clientesModel, {foreignKey: 'idClienteVenda', as: 'vendasClientes'});
 
 module.exports = {vendasModel};
 
