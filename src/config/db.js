@@ -15,16 +15,17 @@ const sequelize = new Sequelize(MSSQL_DB, MSSQL_USER, MSSQL_PASSWORD, {
 
 });
 
-// async function testeConnection() {
-//     try {
-//         await sequelize.authenticate();
-//         console.log('Conexão estabelecida com sucesso!');
-//     } catch (error) {
-//         console.error('Não foi possíve conectar ao banco de dados', error);
-        
-//     }
-// }
 
-// testeConnection();
 
 module.exports = {sequelize};
+
+(async () => {
+    try {
+        await sequelize.authenticate();
+        console.log('Conexão com o banco de dados estabelecida com sucesso.');
+    } catch (error) {
+        console.error('Erro ao conectar ao banco de dados:', error);
+    }
+})();
+
+
