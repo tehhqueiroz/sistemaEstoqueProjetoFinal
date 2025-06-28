@@ -49,7 +49,7 @@ const movimentacaoController = {
                 return res.status(400).json({ message: "Campos obrigatórios não preenchidos" });
             }
 
-            // Verifica se o produto associado existe
+            // Verifica se o produto existe
             const produto = await movimentacaoModel.sequelize.models.produtosModel.findByPk(idProdutoMovimentacao);
             if (!produto) {
                 return res.status(404).json({ message: "Produto não encontrado!" });
@@ -83,7 +83,7 @@ const movimentacaoController = {
                 return res.status(404).json({ message: "Movimentação não encontrada" });
             }
 
-            // Verifica se o produto associado existe
+            // Verifica se o produto existe
             if (idProdutoMovimentacao) {
                 const produto = await movimentacaoModel.sequelize.models.produtosModel.findByPk(idProdutoMovimentacao);
                 if (!produto) {
@@ -119,7 +119,7 @@ const movimentacaoController = {
             // Remove a movimentação
             let result = await movimentacaoModel.destroy({ where: { ID_Movimentacao } });
 
-            // Verifica se a exclusão foi bem-sucedida
+    
             if (result > 0) {
                 return res.status(200).json({ message: `Movimentação excluída com sucesso!` });
             } else {

@@ -1,4 +1,4 @@
-// Função para corrigir a data vinda do banco de dados (no formato 'YYYY-MM-DD')
+// para corrigir a data vinda do banco de dados 
 const parseDateBd = (dataSring) =>{
     let [ano, mes, dia] = dataSring.split('-');
     ano = parseInt(ano);

@@ -55,13 +55,13 @@ const vendasController = {
                 return res.status(400).json({ message: "Campos obrigatórios não preenchidos" });
             }
 
-            // Verifica se o funcionário associado existe
+            // Verifica se o funcionário existe
             const funcionario = await vendasModel.sequelize.models.funcionariosModel.findByPk(idFuncionarioVenda);
             if (!funcionario) {
                 return res.status(404).json({ message: "Funcionário não encontrado!" });
             }
 
-            // Verifica se o cliente associado existe
+            // Verifica se o cliente existe
             const cliente = await vendasModel.sequelize.models.clientesModel.findByPk(idClienteVenda);
             if (!cliente) {
                 return res.status(404).json({ message: "Cliente não encontrado!" });
@@ -102,7 +102,7 @@ const vendasController = {
                 return res.status(404).json({ message: "Venda não encontrada" });
             }
 
-            // Verifica se o funcionário associado existe, caso seja alterado
+            // Verifica se o funcionário  existe, caso seja alterado
             if (idFuncionarioVenda) {
                 const funcionario = await vendasModel.sequelize.models.funcionariosModel.findByPk(idFuncionarioVenda);
                 if (!funcionario) {
@@ -110,7 +110,7 @@ const vendasController = {
                 }
             }
 
-            // Verifica se o cliente associado existe, caso seja alterado
+            // Verifica se o cliente existe, caso seja alterado
             if (idClienteVenda) {
                 const cliente = await vendasModel.sequelize.models.clientesModel.findByPk(idClienteVenda);
                 if (!cliente) {
@@ -152,7 +152,7 @@ const vendasController = {
             // Remove a venda
             let result = await vendasModel.destroy({ where: { ID_Venda } });
 
-            // Verifica se a exclusão foi bem-sucedida
+           
             if (result > 0) {
                 return res.status(200).json({ message: `Venda excluída com sucesso!` });
             } else {

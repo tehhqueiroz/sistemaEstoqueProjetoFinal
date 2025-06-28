@@ -128,10 +128,10 @@ const funcionariosController = {
             // Remove o funcionário
             let nomeFuncionario = funcionario.nomeFuncionario;
 
-            // Exclui o funcionário usando o modelo com a cláusula WHERE
+            // Exclui o funcionário usando where
             let result = await funcionariosModel.destroy({ where: { ID_Funcionario } });
 
-            // Verifica se a exclusão foi bem-sucedida
+            
             if (result > 0) {
                 return res.status(200).json({ message: `${nomeFuncionario} foi excluído com sucesso!` });
             } else {

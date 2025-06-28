@@ -44,7 +44,7 @@ const clientesController = {
         try {
             const { nomeCliente, cpfCliente, emailCliente, celularCliente } = req.body;
 
-            // Validação
+        // Validação
         if (!nomeCliente || !cpfCliente) {
             return res.status(400).json({ message: "Campos obrigatórios não preenchidos" });
         }

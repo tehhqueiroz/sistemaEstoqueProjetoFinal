@@ -76,13 +76,13 @@ const produtosController = {
                 return res.status(400).json({ message: "Campos obrigatórios não preenchidos" });
             }
 
-            // Verifica se o funcionário associado existe
+            // Verifica se o funcionário  existe
             const funcionario = await produtosModel.sequelize.models.funcionariosModel.findByPk(idFuncionarioProduto);
             if (!funcionario) {
                 return res.status(404).json({ message: "Funcionário não encontrado!" });
             }
 
-            // Verifica se o fornecedor associado existe
+            // Verifica se o fornecedor existe
             const fornecedor = await produtosModel.sequelize.models.fornecedoresModel.findByPk(idFornecedorProduto);
             if (!fornecedor) {
                 return res.status(404).json({ message: "Fornecedor não encontrado!" });
@@ -133,7 +133,7 @@ const produtosController = {
                 return res.status(404).json({ message: "Produto não encontrado" });
             }
 
-            // Verifica se o funcionário associado existe, caso seja alterado
+            // Verifica se o funcionário existe, caso seja alterado
             if (idFuncionarioProduto) {
                 const funcionario = await produtosModel.sequelize.models.funcionariosModel.findByPk(idFuncionarioProduto);
                 if (!funcionario) {
@@ -141,7 +141,7 @@ const produtosController = {
                 }
             }
 
-            // Verifica se o fornecedor associado existe, caso seja alterado
+            // Verifica se o fornecedor existe, caso seja alterado
             if (idFornecedorProduto) {
                 const fornecedor = await produtosModel.sequelize.models.fornecedoresModel.findByPk(idFornecedorProduto);
                 if (!fornecedor) {
@@ -188,7 +188,7 @@ const produtosController = {
             // Remove o produto
             let result = await produtosModel.destroy({ where: { ID_Produto } });
 
-            // Verifica se a exclusão foi bem-sucedida
+            
             if (result > 0) {
                 return res.status(200).json({ message: `${produto.nomeProduto} foi excluído com sucesso!` });
             } else {

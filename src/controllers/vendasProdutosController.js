@@ -4,7 +4,7 @@ const { vendasModel } = require('../models/vendasModel');
 const { Op } = require('sequelize');
 
 const vendasProdutosController = {
-    // Listar todas as associações entre vendas e produtos
+    // Listar as associações entre vendas e produtos
     listarVendasProdutos: async (req, res) => {
         try {
             let { ID_ProdutoVP, ID_VendaVP } = req.query;

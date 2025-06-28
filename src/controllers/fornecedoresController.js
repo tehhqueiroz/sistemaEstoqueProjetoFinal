@@ -140,10 +140,10 @@ const fornecedoresController = {
             // Remove o fornecedor
             let nomeFornecedor = fornecedor.nomeFornecedor;
 
-            // Exclui o fornecedor usando o modelo com a cláusula WHERE
+            // Exclui o fornecedor usando WHERE
             let result = await fornecedoresModel.destroy({ where: { ID_Fornecedor } });
 
-            // Verifica se a exclusão foi bem-sucedida
+        
             if (result > 0) {
                 return res.status(200).json({ message: `${nomeFornecedor} foi excluído com sucesso!` });
             } else {
