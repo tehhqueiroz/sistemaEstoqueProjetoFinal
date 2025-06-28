@@ -49,7 +49,7 @@ const clientesController = {
             return res.status(400).json({ message: "Campos obrigatórios não preenchidos" });
         }
 
-// Verifica se o CPF ou email já estão cadastrados
+        // Verifica se o CPF ou email já estão cadastrados
         let clienteExistente = await clientesModel.findOne({
             where: {
                 [Op.or]: [
