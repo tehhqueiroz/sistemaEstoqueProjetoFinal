@@ -4,45 +4,38 @@ const { parseDateBd } = require('../utils/dateUtils');
 
 const produtosController = {
     // Listar produtos
-    listarProdutos: async (req, res) => {
-        try {
-            let { ID_Produto, nomeProduto, categoriaProduto, codigoSku } = req.query;
+listarProdutos: async (req, res) => {
+    try {
+        const { ID_Produto, nomeProduto, categoriaProduto, codigoSku } = req.query;
 
-            let conditions = {};
+        const filtrosOR = [];
 
-            if (ID_Produto) {
-                conditions.ID_Produto = ID_Produto;
-            }
-
-            if (nomeProduto) {
-                conditions.nomeProduto = { [Op.substring]: nomeProduto };
-            }
-
-            if (categoriaProduto) {
-                conditions.categoriaProduto = { [Op.substring]: categoriaProduto };
-            }
-
-            if (codigoSku) {
-                conditions.codigoSku = codigoSku;
-            }
-
-            let produtos = await produtosModel.findAll({
-                where: {
-                    [Op.or]: [
-                        { ID_Produto: { [Op.eq]: conditions.ID_Produto } },
-                        { nomeProduto: { [Op.substring]: conditions.nomeProduto } },
-                        { categoriaProduto: { [Op.substring]: conditions.categoriaProduto } },
-                        { codigoSku: { [Op.eq]: conditions.codigoSku } }
-                    ]
-                }
-            });
-
-            return res.status(200).json(produtos);
-        } catch (error) {
-            console.error("Erro ao listar produtos:", error);
-            return res.status(500).json({ message: "Erro ao listar produtos" });
+        if (ID_Produto) {
+            filtrosOR.push({ ID_Produto });
         }
-    },
+
+        if (nomeProduto) {
+            filtrosOR.push({ nomeProduto: { [Op.substring]: nomeProduto } });
+        }
+
+        if (categoriaProduto) {
+            filtrosOR.push({ categoriaProduto: { [Op.substring]: categoriaProduto } });
+        }
+
+        if (codigoSku) {
+            filtrosOR.push({ codigoSku });
+        }
+
+        const where = filtrosOR.length > 0 ? { [Op.or]: filtrosOR } : {};
+
+        const produtos = await produtosModel.findAll({ where });
+
+        return res.status(200).json(produtos);
+    } catch (error) {
+        console.error("Erro ao listar produtos:", error);
+        return res.status(500).json({ message: "Erro ao listar produtos" });
+    }
+},
 
     // Cadastrar produto
     cadastrarProduto: async (req, res) => {

@@ -4,41 +4,34 @@ const { parseDateBd } = require('../utils/dateUtils');
 
 const vendasController = {
     // Listar vendas
-    listarVendas: async (req, res) => {
-        try {
-            let { ID_Venda, formaPagamento, dataCompra } = req.query;
+listarVendas: async (req, res) => {
+    try {
+        const { ID_Venda, formaPagamento, dataCompra } = req.query;
 
-            let conditions = {};
+        const filtrosOR = [];
 
-            if (ID_Venda) {
-                conditions.ID_Venda = ID_Venda;
-            }
-
-            if (formaPagamento) {
-                conditions.formaPagamento = { [Op.substring]: formaPagamento };
-            }
-
-            if (dataCompra) {
-                conditions.dataCompra = dataCompra;
-            }
-
-            let vendas = await vendasModel.findAll({
-                where: {
-                    [Op.or]: [
-                        { ID_Venda: { [Op.eq]: conditions.ID_Venda } },
-                        { formaPagamento: { [Op.substring]: conditions.formaPagamento } },
-                        { dataCompra: { [Op.eq]: conditions.dataCompra } }
-                    ]
-                }
-            });
-
-            return res.status(200).json(vendas);
-        } catch (error) {
-            console.error("Erro ao listar vendas:", error);
-            return res.status(500).json({ message: "Erro ao listar vendas" });
+        if (ID_Venda) {
+            filtrosOR.push({ ID_Venda });
         }
-    },
 
+        if (formaPagamento) {
+            filtrosOR.push({ formaPagamento: { [Op.substring]: formaPagamento } });
+        }
+
+        if (dataCompra) {
+            filtrosOR.push({ dataCompra });
+        }
+
+        const where = filtrosOR.length > 0 ? { [Op.or]: filtrosOR } : {};
+
+        const vendas = await vendasModel.findAll({ where });
+
+        return res.status(200).json(vendas);
+    } catch (error) {
+        console.error("Erro ao listar vendas:", error);
+        return res.status(500).json({ message: "Erro ao listar vendas" });
+    }
+},
     // Cadastrar venda
     cadastrarVendas: async (req, res) => {
         try {

@@ -5,40 +5,36 @@ const {parseDateBd} = require('../utils/dateUtils')
 
 const clientesController = {
     // Listar clientes
-    listarClientes: async (req, res) => {
-        try {
-            let { ID_Cliente, nomeCliente, cpfCliente } = req.query;
+listarClientes: async (req, res) => {
+  try {
+    const { ID_Cliente, nomeCliente, cpfCliente } = req.query;
 
-            let conditions = {};
+    // array que receberá somente os filtros existentes
+    const filtrosOR = [];
 
-            if (ID_Cliente) {
-                conditions.ID_Cliente = ID_Cliente;
-            }
-
-            if (nomeCliente) {
-                conditions.nomeCliente = { [Op.substring]: nomeCliente }; 
-            }
-
-            if (cpfCliente) {
-                conditions.cpfCliente = cpfCliente;
-            }
-
-            let clientes = await clientesModel.findAll({
-    where: {
-        [Op.or]: [
-            { ID_Cliente: { [Op.eq]: conditions.ID_Cliente } },
-            { nomeCliente: { [Op.substring]: conditions.nomeCliente } },
-            { cpfCliente: { [Op.eq]: conditions.cpfCliente } }
-        ]
+    if (ID_Cliente) {
+      filtrosOR.push({ ID_Cliente: { [Op.eq]: ID_Cliente } });
     }
-});
 
-            return res.status(200).json(clientes);
-        } catch (error) {
-            console.error("Erro ao listar clientes:", error);
-            return res.status(500).json({ message: "Erro ao listar clientes" });
-        }
-    },
+    if (nomeCliente) {
+      filtrosOR.push({ nomeCliente: { [Op.substring]: nomeCliente } });
+    }
+
+    if (cpfCliente) {
+      filtrosOR.push({ cpfCliente: { [Op.eq]: cpfCliente } });
+    }
+
+    // Se tiver filtros, aplica OR; senão where fica vazio ⇒ lista todos
+    const where = filtrosOR.length > 0 ? { [Op.or]: filtrosOR } : {};
+
+    const clientes = await clientesModel.findAll({ where });
+
+    return res.status(200).json(clientes);
+  } catch (error) {
+    console.error('Erro ao listar clientes:', error);
+    return res.status(500).json({ message: 'Erro ao listar clientes' });
+  }
+},
 
     cadastrarCliente: async (req, res) => {
         try {

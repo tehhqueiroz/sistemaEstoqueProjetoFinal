@@ -4,40 +4,34 @@ const { parseDateBd } = require('../utils/dateUtils');
 
 const movimentacaoController = {
     // Listar movimentações
-    listarMovimentacoes: async (req, res) => {
-        try {
-            let { ID_Movimentacao, tipoMovimentacao, dataMovimentacao } = req.query;
+listarMovimentacoes: async (req, res) => {
+    try {
+        const { ID_Movimentacao, tipoMovimentacao, dataMovimentacao } = req.query;
 
-            let conditions = {};
+        const filtrosOR = [];
 
-            if (ID_Movimentacao) {
-                conditions.ID_Movimentacao = ID_Movimentacao;
-            }
-
-            if (tipoMovimentacao) {
-                conditions.tipoMovimentacao = { [Op.substring]: tipoMovimentacao };
-            }
-
-            if (dataMovimentacao) {
-                conditions.dataMovimentacao = dataMovimentacao;
-            }
-
-            let movimentacoes = await movimentacaoModel.findAll({
-                where: {
-                    [Op.or]: [
-                        { ID_Movimentacao: { [Op.eq]: conditions.ID_Movimentacao } },
-                        { tipoMovimentacao: { [Op.substring]: conditions.tipoMovimentacao } },
-                        { dataMovimentacao: { [Op.eq]: conditions.dataMovimentacao } }
-                    ]
-                }
-            });
-
-            return res.status(200).json(movimentacoes);
-        } catch (error) {
-            console.error("Erro ao listar movimentações:", error);
-            return res.status(500).json({ message: "Erro ao listar movimentações" });
+        if (ID_Movimentacao) {
+            filtrosOR.push({ ID_Movimentacao });
         }
-    },
+
+        if (tipoMovimentacao) {
+            filtrosOR.push({ tipoMovimentacao: { [Op.substring]: tipoMovimentacao } });
+        }
+
+        if (dataMovimentacao) {
+            filtrosOR.push({ dataMovimentacao });
+        }
+
+        const where = filtrosOR.length > 0 ? { [Op.or]: filtrosOR } : {};
+
+        const movimentacoes = await movimentacaoModel.findAll({ where });
+
+        return res.status(200).json(movimentacoes);
+    } catch (error) {
+        console.error("Erro ao listar movimentações:", error);
+        return res.status(500).json({ message: "Erro ao listar movimentações" });
+    }
+},
 
     // Cadastrar movimentação
     cadastrarMovimentacao: async (req, res) => {

@@ -4,40 +4,25 @@ const { parseDateBd } = require('../utils/dateUtils');
 
 const fornecedoresController = {
     // Listar fornecedores
-    listarFornecedores: async (req, res) => {
-        try {
-            let { ID_Fornecedor, nomeFornecedor, cnpjFornecedor } = req.query;
+listarFornecedores: async (req, res) => {
+  try {
+    const { ID_Fornecedor, nomeFornecedor, cnpjFornecedor } = req.query;
 
-            let conditions = {};
+    const filtrosOR = [];
+    if (ID_Fornecedor)   filtrosOR.push({ ID_Fornecedor });
+    if (nomeFornecedor)  filtrosOR.push({ nomeFornecedor: { [Op.substring]: nomeFornecedor } });
+    if (cnpjFornecedor)  filtrosOR.push({ cnpjFornecedor });
 
-            if (ID_Fornecedor) {
-                conditions.ID_Fornecedor = ID_Fornecedor;
-            }
+    const where = filtrosOR.length > 0 ? { [Op.or]: filtrosOR } : {};  // 👈 aqui é a mudança
 
-            if (nomeFornecedor) {
-                conditions.nomeFornecedor = { [Op.substring]: nomeFornecedor };
-            }
+    const fornecedores = await fornecedoresModel.findAll({ where });
 
-            if (cnpjFornecedor) {
-                conditions.cnpjFornecedor = cnpjFornecedor;
-            }
-
-            let fornecedores = await fornecedoresModel.findAll({
-                where: {
-                    [Op.or]: [
-                        { ID_Fornecedor: { [Op.eq]: conditions.ID_Fornecedor } },
-                        { nomeFornecedor: { [Op.substring]: conditions.nomeFornecedor } },
-                        { cnpjFornecedor: { [Op.eq]: conditions.cnpjFornecedor } }
-                    ]
-                }
-            });
-
-            return res.status(200).json(fornecedores);
-        } catch (error) {
-            console.error("Erro ao listar fornecedores:", error);
-            return res.status(500).json({ message: "Erro ao listar fornecedores" });
-        }
-    },
+    return res.status(200).json(fornecedores);
+  } catch (error) {
+    console.error('Erro ao listar fornecedores:', error);
+    return res.status(500).json({ message: 'Erro ao listar fornecedores' });
+  }
+},
 
     // Cadastrar fornecedor
     cadastrarFornecedor: async (req, res) => {

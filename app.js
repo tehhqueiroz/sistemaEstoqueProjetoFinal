@@ -1,18 +1,28 @@
 const express = require("express");
-//importacao de rotas
-const {rotasClientes} = require('./src/routes/clientesRoutes');
-//APP
-const app = express(); //Cria uma instancia do express, armazenando todos os metodos e funcionalidades em app.
 
-const PORT = 8081; // Define a porta em que o servidor irá escutar as requisições
+//rotas
+const { rotasClientes }        = require('./src/routes/clientesRoutes');
+const { rotasFornecedores }    = require('./src/routes/fornecedoresRoutes');
+const { rotasFuncionarios }    = require('./src/routes/funcionariosRoutes');
+const { rotasMovimentacao }    = require('./src/routes/movimentacaoRoutes');
+const { rotasProdutos }        = require('./src/routes/produtosRoutes');
+const { rotasVendas }          = require('./src/routes/vendasRoutes');
+const { rotasVendasProdutos }  = require('./src/routes/vendasProdutosRoutes');
 
-app.use(express.json()); // configura o body-parser para interpretar corpos de requisicao no formato json.
+// APP
+const app = express(); 
+const PORT = 8081; // porta 
+app.use(express.json()); 
 
-//Rota para clientes
-app.use("/clientes", rotasClientes);
+// Rotas
+app.use("/clientes",        rotasClientes);
+app.use("/fornecedores",    rotasFornecedores);
+app.use("/funcionarios",    rotasFuncionarios);
+app.use("/movimentacoes",   rotasMovimentacao);
+app.use("/produtos",        rotasProdutos);
+app.use("/vendas",          rotasVendas);
+app.use("/vendas-produtos", rotasVendasProdutos);
 
-
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
-})
-  
+});

@@ -5,35 +5,30 @@ const { Op } = require('sequelize');
 
 const vendasProdutosController = {
     // Listar as associações entre vendas e produtos
-    listarVendasProdutos: async (req, res) => {
-        try {
-            let { ID_ProdutoVP, ID_VendaVP } = req.query;
+listarVendasProdutos: async (req, res) => {
+    try {
+        const { ID_ProdutoVP, ID_VendaVP } = req.query;
 
-            let conditions = {};
+        const filtrosAND = [];
 
-            if (ID_ProdutoVP) {
-                conditions.ID_ProdutoVP = ID_ProdutoVP;
-            }
-
-            if (ID_VendaVP) {
-                conditions.ID_VendaVP = ID_VendaVP;
-            }
-
-            let vendasProdutos = await vendasProdutosModel.findAll({
-                where: {
-                    [Op.and]: [
-                        { ID_ProdutoVP: { [Op.eq]: conditions.ID_ProdutoVP } },
-                        { ID_VendaVP: { [Op.eq]: conditions.ID_VendaVP } }
-                    ]
-                }
-            });
-
-            return res.status(200).json(vendasProdutos);
-        } catch (error) {
-            console.error("Erro ao listar associações de vendas e produtos:", error);
-            return res.status(500).json({ message: "Erro ao listar associações de vendas e produtos" });
+        if (ID_ProdutoVP) {
+            filtrosAND.push({ ID_ProdutoVP });
         }
-    },
+
+        if (ID_VendaVP) {
+            filtrosAND.push({ ID_VendaVP });
+        }
+
+        const where = filtrosAND.length > 0 ? { [Op.and]: filtrosAND } : {};
+
+        const vendasProdutos = await vendasProdutosModel.findAll({ where });
+
+        return res.status(200).json(vendasProdutos);
+    } catch (error) {
+        console.error("Erro ao listar associações de vendas e produtos:", error);
+        return res.status(500).json({ message: "Erro ao listar associações de vendas e produtos" });
+    }
+},
 
     // Associar um produto a uma venda
     associarProdutoAVenda: async (req, res) => {

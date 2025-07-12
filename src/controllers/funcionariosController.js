@@ -4,40 +4,34 @@ const { parseDateBd } = require('../utils/dateUtils');
 
 const funcionariosController = {
     // Listar funcionários
-    listarFuncionarios: async (req, res) => {
-        try {
-            let { ID_Funcionario, nomeFuncionario, emailFuncionario } = req.query;
+listarFuncionarios: async (req, res) => {
+    try {
+        const { ID_Funcionario, nomeFuncionario, emailFuncionario } = req.query;
 
-            let conditions = {};
+        const filtrosOR = [];
 
-            if (ID_Funcionario) {
-                conditions.ID_Funcionario = ID_Funcionario;
-            }
-
-            if (nomeFuncionario) {
-                conditions.nomeFuncionario = { [Op.substring]: nomeFuncionario };
-            }
-
-            if (emailFuncionario) {
-                conditions.emailFuncionario = emailFuncionario;
-            }
-
-            let funcionarios = await funcionariosModel.findAll({
-                where: {
-                    [Op.or]: [
-                        { ID_Funcionario: { [Op.eq]: conditions.ID_Funcionario } },
-                        { nomeFuncionario: { [Op.substring]: conditions.nomeFuncionario } },
-                        { emailFuncionario: { [Op.eq]: conditions.emailFuncionario } }
-                    ]
-                }
-            });
-
-            return res.status(200).json(funcionarios);
-        } catch (error) {
-            console.error("Erro ao listar funcionários:", error);
-            return res.status(500).json({ message: "Erro ao listar funcionários" });
+        if (ID_Funcionario) {
+            filtrosOR.push({ ID_Funcionario });
         }
-    },
+
+        if (nomeFuncionario) {
+            filtrosOR.push({ nomeFuncionario: { [Op.substring]: nomeFuncionario } });
+        }
+
+        if (emailFuncionario) {
+            filtrosOR.push({ emailFuncionario });
+        }
+
+        const where = filtrosOR.length > 0 ? { [Op.or]: filtrosOR } : {};
+
+        const funcionarios = await funcionariosModel.findAll({ where });
+
+        return res.status(200).json(funcionarios);
+    } catch (error) {
+        console.error("Erro ao listar funcionários:", error);
+        return res.status(500).json({ message: "Erro ao listar funcionários" });
+    }
+},
 
     // Cadastrar funcionário
     cadastrarFuncionario: async (req, res) => {
